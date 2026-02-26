@@ -6,8 +6,11 @@ import { userMiddleware } from './middleware';
 import { random } from './utils';
 import { deleteModel } from 'mongoose';
 import cors from 'cors'
+import dotenv from 'dotenv'
+dotenv.config();
 
 const app=express();
+const port = process.env.PORT ||3001;
 app.use(express.json());
 app.use(cors());
 
@@ -163,4 +166,4 @@ app.get("/api/v1/brain/:shareLink",async (req,res) => {
     })
 })
 
-app.listen(3000)
+app.listen(port, () => console.log(`App listening on port ${port}`))
