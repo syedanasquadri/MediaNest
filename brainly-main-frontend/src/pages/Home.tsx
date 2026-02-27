@@ -1,4 +1,5 @@
 export function Home(){
     return <>
-    Home page</>
+    Home page
+    </>
 }
