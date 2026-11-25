@@ -2,6 +2,7 @@ import { Dashboard } from "./pages/dashboard";
 import { Home } from "./pages/Home";
 import { Signin } from "./pages/Signin";
 import { Signup } from "./pages/Signup";
+import { ShareView } from "./pages/ShareView";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App(){
@@ -11,6 +12,7 @@ function App(){
     <Route path="/signup" element={<Signup/>}/>
     <Route path="/signin" element={<Signin/>}/>
     <Route path="/dashboard" element={<Dashboard/>}/>
+    <Route path="/share/:shareLink" element={<ShareView/>}/>
   </Routes>
   </BrowserRouter>
 }

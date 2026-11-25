@@ -1,0 +1,13 @@
+{
+  "name": "medianest-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n \"backend,frontend\" -c \"cyan,magenta\" \"npm run dev --prefix secBrain\" \"npm run dev --prefix brainly-main-frontend\"",
+    "build": "npm run build --prefix secBrain && npm run build --prefix brainly-main-frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
+
