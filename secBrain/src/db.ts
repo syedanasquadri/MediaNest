@@ -13,12 +13,16 @@ const userSchema = new Schema({
 });
 
 const contentSchema = new Schema({
-    title:String,
-    link:String,
-    type: String,
-    tags:[{type:mongoose.Types.ObjectId, ref:'Tag'}],
-    userId:{type:mongoose.Types.ObjectId, ref:'User',required:true}
-})
+    title: String,
+    link: String,
+    type: { type: String, default: "link" },
+    description: String,
+    image: String,
+    siteName: String,
+    favicon: String,
+    tags: { type: [String], default: [] },
+    userId: { type: mongoose.Types.ObjectId, ref: 'User', required: true, index: true }
+}, { timestamps: true });
 
 const linkSchema = new Schema({
   hash:String,

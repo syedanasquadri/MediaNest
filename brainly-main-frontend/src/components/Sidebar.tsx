@@ -3,15 +3,21 @@ import { TwitterIcon } from "../icons/TwitterIcon";
 import { YoutubeIcon } from "../icons/YoutubeIcon";
 import { UserIcon } from "../icons/UserIcon";
 import { LogoutIcon } from "../icons/LogoutIcon";
+import { AllIcon } from "../icons/AllIcon";
+import { ArticleIcon } from "../icons/ArticleIcon";
+import { LinkedInIcon } from "../icons/LinkedInIcon";
+import { InstagramIcon } from "../icons/InstagramIcon";
 import { SidebarItem } from "./SidebarItem";
 
 interface SidebarProps {
   user?: { username?: string; contentCount?: number } | null;
+  currentFilter?: "all" | "twitter" | "youtube" | "linkedin" | "instagram" | "link";
+  onSelectFilter?: (filter: "all" | "twitter" | "youtube" | "linkedin" | "instagram" | "link") => void;
   onOpenProfile?: () => void;
   onLogout?: () => void;
 }
 
-export function SideBar({ user, onOpenProfile, onLogout }: SidebarProps) {
+export function SideBar({ user, currentFilter = "all", onSelectFilter, onOpenProfile, onLogout }: SidebarProps) {
   const initial = user?.username ? user.username.charAt(0).toUpperCase() : "U";
 
   return (
@@ -24,8 +30,42 @@ export function SideBar({ user, onOpenProfile, onLogout }: SidebarProps) {
           MediaNest
         </div>
         <div className="pt-6 flex flex-col gap-1">
-          <SidebarItem text="Twitter" icon={<TwitterIcon />} />
-          <SidebarItem text="Youtube" icon={<YoutubeIcon />} />
+          <SidebarItem 
+            text="All Content" 
+            icon={<AllIcon className="size-5" />} 
+            active={currentFilter === "all"}
+            onClick={() => onSelectFilter && onSelectFilter("all")} 
+          />
+          <SidebarItem 
+            text="Articles / Web" 
+            icon={<ArticleIcon className="size-5" />} 
+            active={currentFilter === "link"}
+            onClick={() => onSelectFilter && onSelectFilter("link")} 
+          />
+          <SidebarItem 
+            text="YouTube" 
+            icon={<YoutubeIcon />} 
+            active={currentFilter === "youtube"}
+            onClick={() => onSelectFilter && onSelectFilter("youtube")} 
+          />
+          <SidebarItem 
+            text="Twitter / X" 
+            icon={<TwitterIcon />} 
+            active={currentFilter === "twitter"}
+            onClick={() => onSelectFilter && onSelectFilter("twitter")} 
+          />
+          <SidebarItem 
+            text="LinkedIn" 
+            icon={<LinkedInIcon className="size-5" />} 
+            active={currentFilter === "linkedin"}
+            onClick={() => onSelectFilter && onSelectFilter("linkedin")} 
+          />
+          <SidebarItem 
+            text="Instagram" 
+            icon={<InstagramIcon className="size-5" />} 
+            active={currentFilter === "instagram"}
+            onClick={() => onSelectFilter && onSelectFilter("instagram")} 
+          />
           <SidebarItem 
             text="My Profile" 
             icon={<UserIcon className="size-5" />} 
@@ -41,7 +81,7 @@ export function SideBar({ user, onOpenProfile, onLogout }: SidebarProps) {
             onClick={onOpenProfile}
             className="flex items-center gap-3 text-left overflow-hidden flex-1 cursor-pointer"
           >
-            <div className="w-9 h-9 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold text-sm shrink-0">
+            <div className="w-9 h-9 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-sm shadow-purple-200">
               {initial}
             </div>
             <div className="truncate">

@@ -1,13 +1,20 @@
-import type { Ref } from "react";
+import type { Ref, InputHTMLAttributes } from "react";
 
-interface InputProps { 
-  placeholder: string; 
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> { 
+  placeholder?: string; 
   reference?: Ref<HTMLInputElement>;
-  type?: string;
 }
 
-export function Input({placeholder, reference, type = "text"}: InputProps) {
-    return <div>
-        <input ref={reference} placeholder={placeholder} type={type} className="px-4 py-2 border rounded-lg m-2" />
-    </div>
+export function Input({ placeholder, reference, type = "text", className = "", ...props }: InputProps) {
+    return (
+        <div>
+            <input 
+                ref={reference} 
+                placeholder={placeholder} 
+                type={type} 
+                className={`px-4 py-2 border border-gray-200 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all ${className}`}
+                {...props}
+            />
+        </div>
+    );
 }

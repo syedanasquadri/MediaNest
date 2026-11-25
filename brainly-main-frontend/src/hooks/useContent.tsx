@@ -1,20 +1,13 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { BACKEND_URL } from "../config";
+import { useContents } from "./useContentQuery";
+import type { ContentItem } from "./useContentQuery";
+export type { ContentItem };
 
-export function useContent(){
-    const [contents, setContents] = useState([]);
+export function useContent() {
+    const { data: contents = [], refetch, isLoading } = useContents();
 
-    useEffect(() => {
-        axios.get(`${BACKEND_URL}/api/v1/content`, {
-            headers: {
-                "Authorization": localStorage.getItem("token")
-            }
-        })
-        .then((response) => {
-            setContents(response.data.content);
-        })
-    },[]);
-
-    return contents; 
+    return { 
+        contents, 
+        refresh: refetch, 
+        loading: isLoading 
+    }; 
 }
