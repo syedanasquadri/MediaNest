@@ -7,6 +7,7 @@ import { AllIcon } from "../icons/AllIcon";
 import { ArticleIcon } from "../icons/ArticleIcon";
 import { LinkedInIcon } from "../icons/LinkedInIcon";
 import { InstagramIcon } from "../icons/InstagramIcon";
+import { SparklesIcon } from "../icons/SparklesIcon";
 import { SidebarItem } from "./SidebarItem";
 
 interface SidebarProps {
@@ -14,22 +15,40 @@ interface SidebarProps {
   currentFilter?: "all" | "twitter" | "youtube" | "linkedin" | "instagram" | "link";
   onSelectFilter?: (filter: "all" | "twitter" | "youtube" | "linkedin" | "instagram" | "link") => void;
   onOpenProfile?: () => void;
+  onOpenChat?: () => void;
   onLogout?: () => void;
 }
 
-export function SideBar({ user, currentFilter = "all", onSelectFilter, onOpenProfile, onLogout }: SidebarProps) {
+export function SideBar({ user, currentFilter = "all", onSelectFilter, onOpenProfile, onOpenChat, onLogout }: SidebarProps) {
   const initial = user?.username ? user.username.charAt(0).toUpperCase() : "U";
 
   return (
     <div className="h-screen bg-white border-r w-72 fixed left-0 top-0 flex flex-col justify-between p-6">
       <div>
-        <div className="flex items-center text-2xl font-bold text-gray-900 pb-8 border-b border-gray-100">
+        <div className="flex items-center text-2xl font-bold text-gray-900 pb-6 border-b border-gray-100">
           <div className="pr-3 text-purple-600">
             <Logo />
           </div>
           MediaNest
         </div>
-        <div className="pt-6 flex flex-col gap-1">
+
+        {/* AI Second Brain Chat Callout */}
+        <div className="pt-5 pb-2">
+          <button
+            onClick={onOpenChat}
+            className="w-full flex items-center justify-between p-3 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 text-white font-medium shadow-md shadow-purple-200 hover:shadow-lg hover:from-purple-700 hover:to-indigo-800 transition-all cursor-pointer group"
+          >
+            <div className="flex items-center gap-2.5">
+              <SparklesIcon className="size-5 text-amber-300 group-hover:scale-110 transition-transform" />
+              <span className="text-sm font-semibold tracking-tight">Chat with NestAI</span>
+            </div>
+            <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-white/20 text-white">
+              AI
+            </span>
+          </button>
+        </div>
+
+        <div className="pt-3 flex flex-col gap-1">
           <SidebarItem 
             text="All Content" 
             icon={<AllIcon className="size-5" />} 

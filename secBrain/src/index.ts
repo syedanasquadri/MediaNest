@@ -8,6 +8,8 @@ import { authRouter } from "./routes/auth.routes";
 import { contentRouter } from "./routes/content.routes";
 import { previewRouter } from "./routes/preview.routes";
 import { shareRouter } from "./routes/share.routes";
+import { searchRouter } from "./routes/search.routes";
+import { chatRouter } from "./routes/chat.routes";
 
 const app = express();
 
@@ -25,6 +27,8 @@ app.use("/api/v1", authRouter);
 app.use("/api/v1", contentRouter);
 app.use("/api/v1", previewRouter);
 app.use("/api/v1", shareRouter);
+app.use("/api/v1", searchRouter);
+app.use("/api/v1", chatRouter);
 
 // Start server after DB connection
 connectDB()

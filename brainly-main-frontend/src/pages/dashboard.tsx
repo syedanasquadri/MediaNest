@@ -1,12 +1,15 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { CreateContentModal } from '../components/CreateContentModal'
 import { ProfileModal } from '../components/ProfileModal'
 import { ShareModal } from '../components/ShareModal'
+import { SearchModal } from '../components/SearchModal'
+import { ChatDrawer } from '../components/ChatDrawer'
 import { PlusIcon } from '../icons/PlusIcon'
 import { ShareIcon } from '../icons/ShareIcon'
 import { UserIcon } from '../icons/UserIcon'
+import { SparklesIcon } from '../icons/SparklesIcon'
 import { SideBar } from '../components/Sidebar'
 import { useContent } from '../hooks/useContent'
 import { useUserProfile, useDeleteContent } from '../hooks/useContentQuery'
@@ -16,12 +19,26 @@ export function Dashboard() {
   const [modalOpen, setModalOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
   const [filter, setFilter] = useState<"all" | "twitter" | "youtube" | "linkedin" | "instagram" | "link">("all");
   
   const { data: user } = useUserProfile();
   const deleteMutation = useDeleteContent();
   const { contents, loading } = useContent();
   const navigate = useNavigate();
+
+  // Cmd+K / Ctrl+K keyboard shortcut to launch AI search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -70,6 +87,7 @@ export function Dashboard() {
         currentFilter={filter}
         onSelectFilter={setFilter}
         onOpenProfile={() => setProfileOpen(true)} 
+        onOpenChat={() => setChatOpen(true)}
         onLogout={handleLogout} 
       />
 
@@ -90,10 +108,20 @@ export function Dashboard() {
         onClose={() => setModalOpen(false)}
       />
 
+      <SearchModal
+        open={searchOpen}
+        onClose={() => setSearchOpen(false)}
+      />
+
+      <ChatDrawer
+        open={chatOpen}
+        onClose={() => setChatOpen(false)}
+      />
+
       <div className="p-6 ml-72 min-h-screen bg-gray-50">
         {/* Top Header */}
-        <div className="flex justify-between items-center pb-6 border-b border-gray-200 mb-6">
-          <div>
+        <div className="flex justify-between items-center pb-6 border-b border-gray-200 mb-6 gap-4">
+          <div className="shrink-0">
             <h1 className="text-2xl font-bold text-gray-800">
               Welcome back{user?.username ? `, ${user.username}` : ''}!
             </h1>
@@ -102,7 +130,20 @@ export function Dashboard() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          {/* AI Search Bar trigger */}
+          <div
+            onClick={() => setSearchOpen(true)}
+            className="hidden md:flex items-center gap-2.5 px-4 py-2 bg-white border border-gray-200 rounded-xl shadow-sm text-gray-400 hover:text-gray-600 hover:border-purple-300 hover:shadow-md cursor-pointer transition-all flex-1 max-w-md mx-4 group"
+            title="Ask your Second Brain (Cmd+K)"
+          >
+            <SparklesIcon className="size-4 text-purple-600 shrink-0 group-hover:scale-110 transition-transform" />
+            <span className="text-sm truncate">Ask Second Brain... (e.g. "which language for DSA?")</span>
+            <kbd className="ml-auto text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded font-mono border border-gray-200 shrink-0">
+              ⌘K
+            </kbd>
+          </div>
+
+          <div className="flex items-center gap-3 shrink-0">
             <Button 
               onClick={() => setModalOpen(true)} 
               variant="primary" 

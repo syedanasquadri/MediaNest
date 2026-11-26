@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import { ContentModel, ContentChunkModel } from "../models";
 import { userMiddleware } from "../middleware/auth.middleware";
 import { resolveUrl } from "../services/scraper.service";
+import { triggerIngestion } from "../services/ingestion.service";
 
 export const contentRouter = Router();
 
@@ -32,7 +33,7 @@ contentRouter.post("/content", userMiddleware, async (req: Request, res: Respons
         ? req.body.tags.filter((t: any) => typeof t === "string") 
         : [];
 
-    await ContentModel.create({
+    const newContent = await ContentModel.create({
         title,
         link,
         type,
@@ -44,8 +45,32 @@ contentRouter.post("/content", userMiddleware, async (req: Request, res: Respons
         tags
     });
 
+    // Asynchronously trigger background transcript extraction and semantic vectorization
+    void triggerIngestion(newContent._id.toString(), req.userId as string);
+
     res.json({
-        message: "Content added"
+        message: "Content added",
+        contentId: newContent._id
+    });
+});
+
+// Manual re-trigger of content ingestion / vectorization
+contentRouter.post("/content/:contentId/ingest", userMiddleware, async (req: Request, res: Response): Promise<void> => {
+    const contentId = req.params.contentId as string;
+    if (!contentId) {
+        res.status(400).json({ message: "Content ID is required" });
+        return;
+    }
+
+    const result = await triggerIngestion(contentId, req.userId as string);
+    if (!result) {
+        res.status(422).json({ message: "Ingestion failed or could not process bookmark" });
+        return;
+    }
+
+    res.json({
+        message: "Ingestion completed",
+        result
     });
 });
 
