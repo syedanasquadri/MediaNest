@@ -1,12 +1,13 @@
 import mongoose from "mongoose";
 import { MONGO_URL } from "./config";
+import { logger } from "./logger";
 
 export async function connectDB(): Promise<void> {
     try {
         await mongoose.connect(MONGO_URL);
-        console.log("MongoDB Connected");
+        logger.info("MongoDB Connected");
     } catch (err) {
-        console.error("MongoDB connection error", err);
+        logger.error({ err }, "MongoDB connection error");
         throw err;
     }
 }
